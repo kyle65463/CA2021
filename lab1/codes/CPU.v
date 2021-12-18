@@ -131,7 +131,7 @@ PC PC(
     .clk_i      (clk_i),
     .rst_i      (rst_i),
     .start_i    (start_i),
-    .PCWrite_i  (1'b1),
+    .PCWrite_i  (PCWrite_o),
     .pc_i       (pc_i),
     .pc_o       (pc_o)
 );
@@ -196,6 +196,7 @@ MUX32 MUX_WriteSrc(
 
 IFID IFID(
     .clk_i      (clk_i),
+    .Stall_i    (Stall_o),
     .pc_i       (pc_o),
     .instr_i    (instr_o),
 
@@ -296,7 +297,7 @@ MUX32W MUX_ForwardB(
     .data_o     (ForwardBdata_o)
 );
 
-HazardDetectionUnit HazardDetectionUnit(
+Hazard_Detection Hazard_Detection(
     .RS1addr_i      (RS1addr_i),
     .RS2addr_i      (RS2addr_i),
     .EX_MemRead_i   (p1_MemRead_o),

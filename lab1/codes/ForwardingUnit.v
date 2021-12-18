@@ -33,15 +33,15 @@ always@(EX_RS1addr_i or EX_RS2addr_i or MEM_RegWrite_i or MEM_RDaddr_i or WB_Reg
     if(MEM_RDaddr_i && MEM_RegWrite_i) begin
         if(MEM_RDaddr_i == EX_RS1addr_i)
             ForwardA_o = 2'b10;
-        else if(MEM_RDaddr_i == EX_RS2addr_i)
+        if(MEM_RDaddr_i == EX_RS2addr_i)
             ForwardB_o = 2'b10;
     end
     else begin
         // MEM Hazard
         if(WB_RDaddr_i && WB_RegWrite_i) begin
-            if(MEM_RDaddr_i == EX_RS1addr_i && WB_RDaddr_i == EX_RS1addr_i)
+            if(WB_RDaddr_i == EX_RS1addr_i)
                 ForwardA_o = 2'b01;
-            else if(MEM_RDaddr_i == EX_RS2addr_i && WB_RDaddr_i == EX_RS2addr_i)
+            if(WB_RDaddr_i == EX_RS2addr_i)
                 ForwardB_o = 2'b01;
         end
     end

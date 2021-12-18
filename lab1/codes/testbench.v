@@ -55,6 +55,9 @@ initial begin
     // [RegisterInitialization] DO NOT REMOVE THIS FLAG !!!
 
     // TODO: initialize your pipeline registers
+    CPU.Hazard_Detection.Stall_o = 1'b0;
+    CPU.Hazard_Detection.NoOp_o = 1'b0;
+    CPU.Hazard_Detection.PCWrite_o = 1'b1;
 
     
     // Load instructions into instruction memory
@@ -82,7 +85,7 @@ always@(posedge Clk) begin
 
     // put in your own signal to count stall and flush
     // TODO
-    // if(CPU.Hazard_Detection.Stall_o == 1 && CPU.Control.Branch_o == 0)stall = stall + 1;
+    if(CPU.Hazard_Detection.Stall_o == 1 && CPU.Control.Branch_o == 0)stall = stall + 1;
     // if(CPU.Flush == 1)flush = flush + 1;  
 
     // print PC
