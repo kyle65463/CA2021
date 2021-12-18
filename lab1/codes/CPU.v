@@ -145,7 +145,7 @@ Registers Registers(
 );
 
 MUX32 MUX_ALUSrc(
-    .data1_i    (p1_RS2data_o),
+    .data1_i    (ForwardBdata_o),
     .data2_i    (p1_imm32_o),
     .select_i   (p1_ALUSrc_o),
     .data_o     (ALUdata_i)
@@ -157,7 +157,7 @@ Sign_Extend Sign_Extend(
 );
   
 ALU ALU(
-    .data1_i    (p1_RS1data_o),
+    .data1_i    (ForwardAdata_o),
     .data2_i    (ALUdata_i),
     .ALUCtrl_i  (ALUCtrl_o),
     .data_o     (ALUdata_o),
@@ -233,7 +233,7 @@ EXMEM EXMEM(
     .MemtoReg_i (p1_MemtoReg_o),
     .MemRead_i  (p1_MemRead_o),
     .MemWrite_i (p1_MemWrite_o),
-    .RS2data_i  (p1_RS2data_o),
+    .RS2data_i  (ForwardBdata_o),
     .RDaddr_i   (p1_RDaddr_o),
 
     .ALUres_o   (p2_ALUres_o),
@@ -273,7 +273,7 @@ ForwadingUnit ForwadingUnit(
 );
 
 MUX32W MUX_ForwardA(
-    .data1_i    (p1_RS2data_o),
+    .data1_i    (p1_RS1data_o),
     .data2_i    (RDdata_i),
     .data3_i    (p2_ALUres_o),
     .select_i   (ForwardA_o),

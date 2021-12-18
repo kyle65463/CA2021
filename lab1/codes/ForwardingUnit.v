@@ -25,7 +25,10 @@ output  [1:0]       ForwardB_o;
 reg     [1:0]       ForwardA_o;
 reg     [1:0]       ForwardB_o;
 
-always@(MEM_RegWrite_i || WB_RegWrite_i) begin
+always@(EX_RS1addr_i or EX_RS2addr_i or MEM_RegWrite_i or MEM_RDaddr_i or WB_RegWrite_i or WB_RDaddr_i) begin
+    ForwardA_o = 2'b0;
+    ForwardB_o = 2'b0;
+
     // EX Hazard
     if(MEM_RDaddr_i && MEM_RegWrite_i) begin
         if(MEM_RDaddr_i == EX_RS1addr_i)
