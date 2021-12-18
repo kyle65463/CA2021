@@ -94,6 +94,14 @@ assign imm12_i =    (Op_i == 7'b0100011) ? {p0_instr_o[31:25], p0_instr_o[11:7]}
 assign funct_i = {funct7_i, funct3_i};
 
 wire     [9:0]      p1_funct_o;
+wire     [4:0]      p1_RS1addr_o;
+wire     [4:0]      p1_RS2addr_o;
+
+// Fowarding Unit
+wire     [1:0]      ForwardA_o;
+wire     [1:0]      ForwardB_o;
+wire     [31:0]     ForwardAdata_o;
+wire     [31:0]     ForwardBdata_o;
 
 Control Control(
     .Op_i       (Op_i),
@@ -195,6 +203,8 @@ IDEX IDEX(
     .MemtoReg_i (MemtoReg_o),
     .MemRead_i  (MemRead_o),
     .MemWrite_i (MemWrite_o),
+    .RS1addr_i  (RS1addr_i), 
+    .RS2addr_i  (RS2addr_i),
     .RS1data_i  (RS1data_o), 
     .RS2data_i  (RS2data_o),
     .funct_i    (funct_i),
@@ -207,6 +217,8 @@ IDEX IDEX(
     .MemtoReg_o (p1_MemtoReg_o),
     .MemRead_o  (p1_MemRead_o),
     .MemWrite_o (p1_MemWrite_o),
+    .RS1addr_o  (p1_RS1addr_o), 
+    .RS2addr_o  (p1_RS2addr_o),
     .RS1data_o  (p1_RS1data_o), 
     .RS2data_o  (p1_RS2data_o),
     .funct_o    (p1_funct_o),
@@ -246,6 +258,34 @@ MEMWB MEMWB(
     .MemtoReg_o (p3_MemtoReg_o),
     .Memdata_o  (p3_Memdata_o),
     .RDaddr_o   (p3_RDaddr_o)
+);
+
+ForwadingUnit ForwadingUnit(
+    .EX_RS1addr_i   (p1_RS1addr_o),
+    .EX_RS2addr_i   (p1_RS2addr_o),
+    .MEM_RegWrite_i (p2_RegWrite_o),
+    .MEM_RDaddr_i   (p2_RDaddr_o),
+    .WB_RegWrite_i  (p3_RegWrite_o),
+    .WB_RDaddr_i    (p3_RDaddr_o),
+    
+    .ForwardA_o     (ForwardA_o),
+    .ForwardB_o     (ForwardB_o)
+);
+
+MUX32W MUX_ForwardA(
+    .data1_i    (p1_RS2data_o),
+    .data2_i    (RDdata_i),
+    .data3_i    (p2_ALUres_o),
+    .select_i   (ForwardA_o),
+    .data_o     (ForwardAdata_o)
+);
+
+MUX32W MUX_ForwardB(
+    .data1_i    (p1_RS2data_o),
+    .data2_i    (RDdata_i),
+    .data3_i    (p2_ALUres_o),
+    .select_i   (ForwardB_o),
+    .data_o     (ForwardBdata_o)
 );
 
 endmodule

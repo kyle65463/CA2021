@@ -7,6 +7,8 @@ module IDEX
     MemtoReg_i,
     MemRead_i,
     MemWrite_i,
+    RS1addr_i, 
+    RS2addr_i, 
     RS1data_i, 
     RS2data_i,
     funct_i,
@@ -19,6 +21,8 @@ module IDEX
     MemtoReg_o,
     MemRead_o,
     MemWrite_o,
+    RS1addr_o,
+    RS2addr_o,
     RS1data_o, 
     RS2data_o,
     funct_o,
@@ -34,6 +38,8 @@ input               RegWrite_i;
 input               MemtoReg_i;
 input               MemRead_i;
 input               MemWrite_i;
+input   [4:0]       RS1addr_i;
+input   [4:0]       RS2addr_i;
 input   [31:0]      RS1data_i; 
 input   [31:0]      RS2data_i;
 input   [9:0]       funct_i;
@@ -46,6 +52,8 @@ output              RegWrite_o;
 output              MemtoReg_o;
 output              MemRead_o;
 output              MemWrite_o;
+output  [4:0]       RS1addr_o;
+output  [4:0]       RS2addr_o;
 output  [31:0]      RS1data_o; 
 output  [31:0]      RS2data_o;
 output  [9:0]       funct_o;
@@ -58,6 +66,8 @@ reg                 RegWrite_o;
 reg                 MemtoReg_o;
 reg                 MemRead_o;
 reg                 MemWrite_o;
+reg     [4:0]       RS1addr_o;
+reg     [4:0]       RS2addr_o;
 reg     [31:0]      RS1data_o; 
 reg     [31:0]      RS2data_o;
 reg     [9:0]       funct_o;
@@ -71,6 +81,8 @@ always@(posedge clk_i) begin
     MemtoReg_o <= MemtoReg_i;
     MemRead_o <= MemRead_i;
     MemWrite_o <= MemWrite_i;
+    RS1addr_o <= RS1addr_i;
+    RS2addr_o <= RS2addr_i;
     RS1data_o <= RS1data_i;
     RS2data_o <= RS2data_i;
     funct_o <= funct_i;
