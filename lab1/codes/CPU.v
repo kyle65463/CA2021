@@ -86,11 +86,11 @@ wire     [31:0]     Memdata_o;
 
 wire     [31:0]     p3_Memdata_o;
 
-assign {RS1addr_i, funct3_i, RDaddr_i, Op_i} = instr_o[19:0];
-assign {funct7_i, RS2addr_i}                 = instr_o[31:20];
-assign imm12_i =    (Op_i == 7'b0100011) ? {instr_o[31:25], instr_o[11:7]}: // sw
-                    (Op_i == 7'b1100011) ? {instr_o[31], instr_o[7], instr_o[30:20], instr_o[11:8], 1'b0}: // beq
-                    instr_o[31:20];
+assign {RS1addr_i, funct3_i, RDaddr_i, Op_i} = p0_instr_o[19:0];
+assign {funct7_i, RS2addr_i}                 = p0_instr_o[31:20];
+assign imm12_i =    (Op_i == 7'b0100011) ? {p0_instr_o[31:25], p0_instr_o[11:7]}: // sw
+                    (Op_i == 7'b1100011) ? {p0_instr_o[31], p0_instr_o[7], p0_instr_o[30:20], p0_instr_o[11:8], 1'b0}: // beq
+                    p0_instr_o[31:20];
 assign funct_i = {funct7_i, funct3_i};
 
 wire     [9:0]      p1_funct_o;
@@ -129,17 +129,17 @@ Registers Registers(
     .clk_i       (clk_i),
     .RS1addr_i   (RS1addr_i),
     .RS2addr_i   (RS2addr_i),
-    .RDaddr_i    (RDaddr_i), 
+    .RDaddr_i    (p3_RDaddr_o), 
     .RDdata_i    (RDdata_i),
-    .RegWrite_i  (RegWrite_o), 
+    .RegWrite_i  (p3_RegWrite_o), 
     .RS1data_o   (RS1data_o), 
     .RS2data_o   (RS2data_o)
 );
 
 MUX32 MUX_ALUSrc(
-    .data1_i    (RS2data_o),
-    .data2_i    (imm32_o),
-    .select_i   (ALUSrc_o),
+    .data1_i    (p1_RS2data_o),
+    .data2_i    (p1_imm32_o),
+    .select_i   (p1_ALUSrc_o),
     .data_o     (ALUdata_i)
 );
 
@@ -149,7 +149,7 @@ Sign_Extend Sign_Extend(
 );
   
 ALU ALU(
-    .data1_i    (RS1data_o),
+    .data1_i    (p1_RS1data_o),
     .data2_i    (ALUdata_i),
     .ALUCtrl_i  (ALUCtrl_o),
     .data_o     (ALUdata_o),
@@ -157,24 +157,24 @@ ALU ALU(
 );
 
 ALU_Control ALU_Control(
-    .funct_i    (funct_i),
-    .ALUOp_i    (ALUOp_o),
+    .funct_i    (p1_funct_o),
+    .ALUOp_i    (p1_ALUOp_o),
     .ALUCtrl_o  (ALUCtrl_o)
 );
 
 Data_Memory Data_Memory(
     .clk_i       (clk_i), 
-    .addr_i      (ALUdata_o), 
-    .MemRead_i   (MemRead_o),
-    .MemWrite_i  (MemWrite_o),
-    .data_i      (RS2data_o),
+    .addr_i      (p2_ALUres_o), 
+    .MemRead_i   (p2_MemRead_o),
+    .MemWrite_i  (p2_MemWrite_o),
+    .data_i      (p2_RS2data_o),
     .data_o      (Memdata_o)
 );
 
 MUX32 MUX_WriteSrc(
-    .data1_i    (ALUdata_o),
-    .data2_i    (Memdata_o),
-    .select_i   (MemtoReg_o),
+    .data1_i    (p3_ALUres_o),
+    .data2_i    (p3_Memdata_o),
+    .select_i   (p3_MemtoReg_o),
     .data_o     (RDdata_i)
 );
 
