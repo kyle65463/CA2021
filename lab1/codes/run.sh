@@ -1,2 +1,2 @@
 iverilog -o CPU.out *.v
-# ./CPU.out
+./CPU.out

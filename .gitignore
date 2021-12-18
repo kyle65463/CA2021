@@ -2,3 +2,6 @@
 CA2021_hw4/
 hw2/
 hw3/
+*.vcd
+*.out
+*.txt

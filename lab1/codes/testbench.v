@@ -34,12 +34,24 @@ initial begin
         CPU.Data_Memory.memory[i] = 32'b0;
     end    
     CPU.Data_Memory.memory[0] = 5;
+    CPU.Data_Memory.memory[1] = 6;
+    CPU.Data_Memory.memory[2] = 10;
+    CPU.Data_Memory.memory[3] = 18;
+    CPU.Data_Memory.memory[4] = 29;
     // [D-MemoryInitialization] DO NOT REMOVE THIS FLAG !!!
         
     // initialize Register File
     for(i=0; i<32; i=i+1) begin
         CPU.Registers.register[i] = 32'b0;
     end
+    CPU.Registers.register[24] = -24;
+    CPU.Registers.register[25] = -25;
+    CPU.Registers.register[26] = -26;
+    CPU.Registers.register[27] = -27;
+    CPU.Registers.register[28] = 56;
+    CPU.Registers.register[29] = 58;
+    CPU.Registers.register[30] = 60;
+    CPU.Registers.register[31] = 62;
     // [RegisterInitialization] DO NOT REMOVE THIS FLAG !!!
 
     // TODO: initialize your pipeline registers
@@ -69,8 +81,9 @@ always@(posedge Clk) begin
         $finish;
 
     // put in your own signal to count stall and flush
-    if(CPU.Hazard_Detection.Stall_o == 1 && CPU.Control.Branch_o == 0)stall = stall + 1;
-    if(CPU.Flush == 1)flush = flush + 1;  
+    // TODO
+    // if(CPU.Hazard_Detection.Stall_o == 1 && CPU.Control.Branch_o == 0)stall = stall + 1;
+    // if(CPU.Flush == 1)flush = flush + 1;  
 
     // print PC
     // DO NOT CHANGE THE OUTPUT FORMAT
