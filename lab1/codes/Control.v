@@ -1,22 +1,30 @@
 module Control
 (
     Op_i,
+    NoOp_i,
     ALUOp_o,
     ALUSrc_o,
     RegWrite_o,
     MemtoReg_o,
     MemRead_o,
-    MemWrite_o
+    MemWrite_o,
+    Branch_o
 );
 
 // Ports
 input   [6:0]       Op_i;
+output              NoOp_i;
 output  [1:0]       ALUOp_o;
 output              ALUSrc_o;
 output              RegWrite_o;
 output              MemtoReg_o;
 output              MemRead_o;
 output              MemWrite_o;
+output              Branch_o;
+
+`define LOAD    7'b0000011
+`define STORE   7'b0100011
+`define BRANCH  7'b1100011
 
 assign ALUOp_o =    (Op_i == 7'b0010011) ? 2'b00: // I-type
                     (Op_i == 7'b0110011) ? 2'b10: // R-type
@@ -37,26 +45,10 @@ assign RegWrite_o = (Op_i == 7'b0010011) ? 1'b1: // I-type
                     (Op_i == 7'b0100011) ? 1'b0: // sw
                     (Op_i == 7'b1100011) ? 1'b0: // beq
                     1'bx;
-// Only lw instruction is true
-assign MemtoReg_o = (Op_i == 7'b0010011) ? 2'b0: // I-type
-                    (Op_i == 7'b0110011) ? 2'b0: // R-type
-                    (Op_i == 7'b0000011) ? 1'b1: // lw
-                    (Op_i == 7'b0100011) ? 1'b0: // sw
-                    (Op_i == 7'b1100011) ? 1'b0: // beq
-                    2'bx;
-// Only lw instruction is true
-assign MemRead_o =  (Op_i == 7'b0010011) ? 1'b0: // I-type
-                    (Op_i == 7'b0110011) ? 1'b0: // R-type
-                    (Op_i == 7'b0000011) ? 1'b1: // lw
-                    (Op_i == 7'b0100011) ? 1'b0: // sw
-                    (Op_i == 7'b1100011) ? 1'b0: // beq
-                    1'bx;
-// Only sw instruction is true
-assign MemWrite_o = (Op_i == 7'b0010011) ? 1'b0: // I-type
-                    (Op_i == 7'b0110011) ? 1'b0: // R-type
-                    (Op_i == 7'b0000011) ? 1'b0: // lw
-                    (Op_i == 7'b0100011) ? 1'b1: // sw
-                    (Op_i == 7'b1100011) ? 1'b0: // beq
-                    1'bx;
+
+assign MemtoReg_o = Op_i == `LOAD   ? 1'b1 : 1'b0; // Only lw instruction
+assign MemRead_o =  Op_i == `LOAD   ? 1'b1 : 1'b0; // Only lw instruction 
+assign MemWrite_o = Op_i == `STORE  ? 1'b1 : 1'b0; // Only sw instruction
+assign Branch_o =   Op_i == `BRANCH ? 1'b1 : 1'b0; // Only beq instruction
 
 endmodule

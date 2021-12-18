@@ -26,6 +26,7 @@ wire     [6:0]      Op_i;
 wire                MemtoReg_o;
 wire                MemRead_o;
 wire                MemWrite_o;
+wire                Branch_o;
 
 wire     [1:0]      p1_ALUOp_o;
 wire                p1_ALUSrc_o;
@@ -103,14 +104,21 @@ wire     [1:0]      ForwardB_o;
 wire     [31:0]     ForwardAdata_o;
 wire     [31:0]     ForwardBdata_o;
 
+// Hazard Detection Unit
+wire                NoOp_o;
+wire                Stall_o;
+wire                PCWrite_o;
+
 Control Control(
     .Op_i       (Op_i),
+    .NoOp_i     (NoOp_o),
     .ALUOp_o    (ALUOp_o),
     .ALUSrc_o   (ALUSrc_o),
     .RegWrite_o (RegWrite_o),
     .MemtoReg_o (MemtoReg_o),
     .MemRead_o  (MemRead_o),
-    .MemWrite_o (MemWrite_o)
+    .MemWrite_o (MemWrite_o),
+    .Branch_o (Branch_o)
 );
 
 Adder Add_PC(
@@ -286,6 +294,17 @@ MUX32W MUX_ForwardB(
     .data3_i    (p2_ALUres_o),
     .select_i   (ForwardB_o),
     .data_o     (ForwardBdata_o)
+);
+
+HazardDetectionUnit HazardDetectionUnit(
+    .RS1addr_i      (RS1addr_i),
+    .RS2addr_i      (RS2addr_i),
+    .EX_MemRead_i   (p1_MemRead_o),
+    .EX_RDaddr_i    (p1_RDaddr_o),
+    
+    .NoOp_o         (NoOp_o),
+    .Stall_o        (Stall_o),
+    .PCWrite_o      (PCWrite_o)
 );
 
 endmodule
