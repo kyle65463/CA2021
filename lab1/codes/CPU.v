@@ -13,6 +13,7 @@ input               start_i;
 // PC & Instruction memory
 wire     [31:0]     pc_i;
 wire     [31:0]     pc_o;
+wire     [31:0]     adder_pc_o;
 wire     [31:0]     instr_o;
 
 wire     [31:0]     p0_pc_o;
@@ -98,7 +99,7 @@ wire     [9:0]      p1_funct_o;
 wire     [4:0]      p1_RS1addr_o;
 wire     [4:0]      p1_RS2addr_o;
 
-// Fowarding Unit
+// Forwarding Unit
 wire     [1:0]      ForwardA_o;
 wire     [1:0]      ForwardB_o;
 wire     [31:0]     ForwardAdata_o;
@@ -108,6 +109,10 @@ wire     [31:0]     ForwardBdata_o;
 wire                NoOp_o;
 wire                Stall_o;
 wire                PCWrite_o;
+
+// Branch Unit
+wire                Flush_o;
+wire     [31:0]     jump_addr_o;
 
 Control Control(
     .Op_i       (Op_i),
@@ -124,7 +129,7 @@ Control Control(
 Adder Add_PC(
     .data1_in   (pc_o),
     .data2_in   (32'd4),
-    .data_o     (pc_i)
+    .data_o     (adder_pc_o)
 );
 
 PC PC(
@@ -199,6 +204,7 @@ IFID IFID(
     .start_i    (start_i),
     
     .Stall_i    (Stall_o),
+    .Flush_i    (Flush_o),
     .pc_i       (pc_o),
     .instr_i    (instr_o),
 
@@ -314,6 +320,24 @@ Hazard_Detection Hazard_Detection(
     .NoOp_o         (NoOp_o),
     .Stall_o        (Stall_o),
     .PCWrite_o      (PCWrite_o)
+);
+
+Branch_Unit Branch_Unit(
+    .RS1data_i      (RS1data_o),
+    .RS2data_i      (RS2data_o),
+    .Branch_i       (Branch_o),
+    .ID_pc_i        (p0_pc_o),
+    .imm32_i        (imm32_o),
+    
+    .Flush_o        (Flush_o),
+    .jump_addr_o    (jump_addr_o)
+);
+
+MUX32 MUX_PC(
+    .data1_i    (adder_pc_o),
+    .data2_i    (jump_addr_o),
+    .select_i   (Flush_o),
+    .data_o     (pc_i)
 );
 
 endmodule
