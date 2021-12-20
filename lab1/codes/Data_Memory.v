@@ -17,7 +17,7 @@ input   [31:0]      data_i;
 output  [31:0]      data_o;
 
 // data memory
-reg     [31:0]     memory  [0:1023];
+reg signed    [31:0]     memory  [0:1023];
 
 // tmp
 reg     [63:0]     tmp;

@@ -196,6 +196,8 @@ MUX32 MUX_WriteSrc(
 
 IFID IFID(
     .clk_i      (clk_i),
+    .start_i    (start_i),
+    
     .Stall_i    (Stall_o),
     .pc_i       (pc_o),
     .instr_i    (instr_o),
@@ -206,6 +208,8 @@ IFID IFID(
 
 IDEX IDEX(
     .clk_i      (clk_i),
+    .start_i    (start_i),
+
     .ALUOp_i    (ALUOp_o),
     .ALUSrc_i   (ALUSrc_o),
     .RegWrite_i (RegWrite_o),
@@ -237,6 +241,8 @@ IDEX IDEX(
 
 EXMEM EXMEM(
     .clk_i      (clk_i),
+    .start_i    (start_i),
+
     .ALUres_i   (ALUdata_o),
     .RegWrite_i (p1_RegWrite_o),
     .MemtoReg_i (p1_MemtoReg_o),
@@ -256,6 +262,8 @@ EXMEM EXMEM(
 
 MEMWB MEMWB(
     .clk_i      (clk_i),
+    .start_i    (start_i),
+
     .ALUres_i   (p2_ALUres_o),
     .RegWrite_i (p2_RegWrite_o),
     .MemtoReg_i (p2_MemtoReg_o),

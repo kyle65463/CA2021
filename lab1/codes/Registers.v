@@ -21,16 +21,18 @@ output  [31:0]      RS1data_o;
 output  [31:0]      RS2data_o;
 
 // Register File
-reg signed [31:0]      register        [0:31];
+reg signed    [31:0]      register        [0:31];
 
 // Read Data      
-assign  RS1data_o = register[RS1addr_i];
-assign  RS2data_o = register[RS2addr_i];
+assign  RS1data_o = (RS1addr_i == RDaddr_i && RegWrite_i)? RDdata_i : register[RS1addr_i];
+assign  RS2data_o = (RS2addr_i == RDaddr_i && RegWrite_i)? RDdata_i : register[RS2addr_i];
 
 // Write Data   
 always@(posedge clk_i) begin
-    if(RegWrite_i)
+    if(RegWrite_i && RDaddr_i != 0)
         register[RDaddr_i] <= RDdata_i;
 end
+
+
    
 endmodule 

@@ -1,6 +1,8 @@
 module IDEX
 (
     clk_i,
+    start_i,
+    
     ALUOp_i,
     ALUSrc_i,
     RegWrite_i,
@@ -32,6 +34,7 @@ module IDEX
 
 // Ports
 input               clk_i;
+input               start_i;
 input   [1:0]       ALUOp_i;
 input               ALUSrc_i;
 input               RegWrite_i;
@@ -75,19 +78,21 @@ reg     [31:0]      imm32_o;
 reg     [4:0]       RDaddr_o;
 
 always@(posedge clk_i) begin
-    ALUOp_o <= ALUOp_i;
-    ALUSrc_o <= ALUSrc_i;
-    RegWrite_o <= RegWrite_i;
-    MemtoReg_o <= MemtoReg_i;
-    MemRead_o <= MemRead_i;
-    MemWrite_o <= MemWrite_i;
-    RS1addr_o <= RS1addr_i;
-    RS2addr_o <= RS2addr_i;
-    RS1data_o <= RS1data_i;
-    RS2data_o <= RS2data_i;
-    funct_o <= funct_i;
-    imm32_o <= imm32_i;
-    RDaddr_o <= RDaddr_i;
+    if(start_i) begin
+        ALUOp_o <= ALUOp_i;
+        ALUSrc_o <= ALUSrc_i;
+        RegWrite_o <= RegWrite_i;
+        MemtoReg_o <= MemtoReg_i;
+        MemRead_o <= MemRead_i;
+        MemWrite_o <= MemWrite_i;
+        RS1addr_o <= RS1addr_i;
+        RS2addr_o <= RS2addr_i;
+        RS1data_o <= RS1data_i;
+        RS2data_o <= RS2data_i;
+        funct_o <= funct_i;
+        imm32_o <= imm32_i;
+        RDaddr_o <= RDaddr_i;
+    end
 end
 
 endmodule
