@@ -91,7 +91,7 @@ wire     [31:0]     p3_Memdata_o;
 assign {RS1addr_i, funct3_i, RDaddr_i, Op_i} = p0_instr_o[19:0];
 assign {funct7_i, RS2addr_i}                 = p0_instr_o[31:20];
 assign imm12_i =    (Op_i == 7'b0100011) ? {p0_instr_o[31:25], p0_instr_o[11:7]}: // sw
-                    (Op_i == 7'b1100011) ? {p0_instr_o[31], p0_instr_o[7], p0_instr_o[30:20], p0_instr_o[11:8], 1'b0}: // beq
+                    (Op_i == 7'b1100011) ? {p0_instr_o[31], p0_instr_o[7], p0_instr_o[29:25], p0_instr_o[11:8]}: // beq
                     p0_instr_o[31:20];
 assign funct_i = {funct7_i, funct3_i};
 
@@ -111,7 +111,7 @@ wire                Stall_o;
 wire                PCWrite_o;
 
 // Branch Unit
-wire                Flush_o;
+wire                Flush;
 wire     [31:0]     jump_addr_o;
 
 Control Control(
@@ -204,7 +204,7 @@ IFID IFID(
     .start_i    (start_i),
     
     .Stall_i    (Stall_o),
-    .Flush_i    (Flush_o),
+    .Flush_i    (Flush),
     .pc_i       (pc_o),
     .instr_i    (instr_o),
 
@@ -329,14 +329,14 @@ Branch_Unit Branch_Unit(
     .ID_pc_i        (p0_pc_o),
     .imm32_i        (imm32_o),
     
-    .Flush_o        (Flush_o),
+    .Flush_o        (Flush),
     .jump_addr_o    (jump_addr_o)
 );
 
 MUX32 MUX_PC(
     .data1_i    (adder_pc_o),
     .data2_i    (jump_addr_o),
-    .select_i   (Flush_o),
+    .select_i   (Flush),
     .data_o     (pc_i)
 );
 
