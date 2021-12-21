@@ -29,21 +29,22 @@ always@(EX_RS1addr_i or EX_RS2addr_i or MEM_RegWrite_i or MEM_RDaddr_i or WB_Reg
     ForwardA_o = 2'b0;
     ForwardB_o = 2'b0;
 
-    if(MEM_RDaddr_i && MEM_RegWrite_i) begin
-        // EX Hazard
-        if(MEM_RDaddr_i == EX_RS1addr_i)
-            ForwardA_o = 2'b10;
-        if(MEM_RDaddr_i == EX_RS2addr_i)
-            ForwardB_o = 2'b10;
+    if(MEM_RegWrite_i && (MEM_RDaddr_i != 0) && (MEM_RDaddr_i == EX_RS1addr_i))
+    begin
+        ForwardA_o = 2'b10;
     end
-    else begin
-        if(WB_RDaddr_i && WB_RegWrite_i) begin
-            // MEM Hazard
-            if(WB_RDaddr_i == EX_RS1addr_i)
-                ForwardA_o = 2'b01;
-            if(WB_RDaddr_i == EX_RS2addr_i)
-                ForwardB_o = 2'b01;
-        end
+    if(MEM_RegWrite_i && (MEM_RDaddr_i != 0) && (MEM_RDaddr_i == EX_RS2addr_i))
+    begin
+        ForwardB_o = 2'b10;
+    end
+    
+    if(WB_RegWrite_i && (WB_RDaddr_i != 0) && !(MEM_RegWrite_i && (MEM_RDaddr_i != 0) && (MEM_RDaddr_i == EX_RS1addr_i)) && (WB_RDaddr_i == EX_RS1addr_i))
+    begin
+        ForwardA_o = 2'b01;
+    end
+    if(WB_RegWrite_i && (WB_RDaddr_i != 0) && !(MEM_RegWrite_i && (MEM_RDaddr_i != 0) && (MEM_RDaddr_i == EX_RS2addr_i)) && (WB_RDaddr_i == EX_RS2addr_i))
+    begin
+        ForwardB_o = 2'b01;
     end
 end
 
