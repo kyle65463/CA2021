@@ -1,6 +1,6 @@
 import random
 
-inst_list = ['and', 'sll', 'add', 'sub', 'mul', 'addi', 'srai', 'lw', 'sw', 'beq']
+inst_list = ['and', 'add', 'sub', 'mul', 'addi',  'lw', 'sw', 'beq']
 # inst_list = ['add']
 
 def tohex(x):
@@ -10,7 +10,7 @@ def rand_operands(imm=False, branch=False):
     a = random.randint(0, 31)
     b = random.randint(0, 31) 
     if imm and not branch:
-        c = random.randint(0, 63) - 32
+        c = random.randint(0, 60) - 30
     else:
         c = random.randint(2, 6) * 2
     return [tohex(a), tohex(b), tohex(c) if not imm else str(c)]

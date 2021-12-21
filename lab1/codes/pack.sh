@@ -4,7 +4,7 @@ excluded=('PC.v' 'Instruction_Memory.v' 'Data_Memory.v' 'Registers.v')
 
 mkdir $dir $dir/codes
 cp *.v $dir/codes
-# cp ${id}_lab1_report.pdf $dir
+cp report.pdf $dir/${id}_lab1_report.pdf
 
 for file in ${excluded[@]}; do
     rm $dir/codes/$file
