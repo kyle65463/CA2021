@@ -91,7 +91,7 @@ wire     [31:0]     p3_Memdata_o;
 assign {RS1addr_i, funct3_i, RDaddr_i, Op_i} = p0_instr_o[19:0];
 assign {funct7_i, RS2addr_i}                 = p0_instr_o[31:20];
 assign imm12_i =    (Op_i == 7'b0100011) ? {p0_instr_o[31:25], p0_instr_o[11:7]}: // sw
-                    (Op_i == 7'b1100011) ? {p0_instr_o[31], p0_instr_o[7], p0_instr_o[29:25], p0_instr_o[11:8]}: // beq
+                    (Op_i == 7'b1100011) ? {p0_instr_o[31], p0_instr_o[7], p0_instr_o[30:25], p0_instr_o[11:8]}: // beq
                     p0_instr_o[31:20];
 assign funct_i = {funct7_i, funct3_i};
 

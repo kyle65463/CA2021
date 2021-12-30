@@ -96,7 +96,7 @@ def parse(operator, operands):
         rs2 = tobin(int(operands[1]))
         imm = tobin(int(operands[2]), 12)
         funct3 = table[operator]['funct3']
-        return f'{imm[0]}_{imm[2:8]}_{rs2}_{rs1}_{funct3}_{imm[8:12]}_{imm[1]}_{opcode}'
+        return f'{imm[0]}_{imm[1:7]}_{rs2}_{rs1}_{funct3}_{imm[7:11]}_{imm[1]}_{opcode}'
     return ''
         
 with open(sys.argv[1], 'r') as f:
