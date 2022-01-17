@@ -1,0 +1,11 @@
+addi x24,x0,0
+addi x26,x0,4
+addi x28,x0,4
+addi x15,x0,-1
+mul x25,x26,x28
+addi x26,x26,-1
+lw x27,0(x25)
+add x24,x24,x27
+beq x26, x15, 8
+beq x0, x0, -20
+sw x24, 28(x0)
