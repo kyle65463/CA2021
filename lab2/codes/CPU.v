@@ -2,13 +2,27 @@ module CPU
 (
     clk_i, 
     rst_i,
-    start_i
+    start_i,
+
+    mem_data_i,
+    mem_ack_i,
+    mem_data_o,
+    mem_addr_o,
+    mem_enable_o,
+    mem_write_o
 );
 
 // Ports
 input               clk_i;
 input               rst_i;
 input               start_i;
+
+input     [256-1:0]  mem_data_i; 
+input                mem_ack_i;     
+output    [256-1:0]  mem_data_o; 
+output    [32-1:0]   mem_addr_o;     
+output               mem_enable_o; 
+output               mem_write_o; 
 
 // PC & Instruction memory
 wire     [31:0]     pc_i;
@@ -109,6 +123,7 @@ wire     [31:0]     ForwardBdata_o;
 wire                NoOp_o;
 wire                Stall_o;
 wire                PCWrite_o;
+wire                mem_stall_o;
 
 // Branch Unit
 wire                Flush;
@@ -136,6 +151,7 @@ PC PC(
     .clk_i      (clk_i),
     .rst_i      (rst_i),
     .start_i    (start_i),
+    .stall_i    (mem_stall_o),
     .PCWrite_i  (PCWrite_o),
     .pc_i       (pc_i),
     .pc_o       (pc_o)
@@ -183,13 +199,26 @@ ALU_Control ALU_Control(
     .ALUCtrl_o  (ALUCtrl_o)
 );
 
-Data_Memory Data_Memory(
-    .clk_i       (clk_i), 
-    .addr_i      (p2_ALUres_o), 
-    .MemRead_i   (p2_MemRead_o),
-    .MemWrite_i  (p2_MemWrite_o),
-    .data_i      (p2_RS2data_o),
-    .data_o      (Memdata_o)
+dcache_controller dcache(
+    // System clock, reset and stall
+    .clk_i(clk_i),
+    .rst_i(rst_i),
+    
+    // to Data Memory interface        
+    .mem_data_i     (mem_data_i), 
+    .mem_ack_i      (mem_ack_i),     
+    .mem_data_o     (mem_data_o), 
+    .mem_addr_o     (mem_addr_o),     
+    .mem_enable_o   (mem_enable_o), 
+    .mem_write_o    (mem_write_o), 
+    
+    // to CPU interface    
+    .cpu_data_i     (p2_RS2data_o),
+    .cpu_addr_i     (p2_ALUres_o),      
+    .cpu_MemRead_i  (p2_MemRead_o), 
+    .cpu_MemWrite_i (p2_MemWrite_o),
+    .cpu_data_o     (Memdata_o),
+    .cpu_stall_o    (mem_stall_o)
 );
 
 MUX32 MUX_WriteSrc(
