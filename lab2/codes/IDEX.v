@@ -2,6 +2,7 @@ module IDEX
 (
     clk_i,
     start_i,
+    stall_i,
     
     ALUOp_i,
     ALUSrc_i,
@@ -35,6 +36,7 @@ module IDEX
 // Ports
 input               clk_i;
 input               start_i;
+input               stall_i;
 input   [1:0]       ALUOp_i;
 input               ALUSrc_i;
 input               RegWrite_i;
@@ -78,7 +80,7 @@ reg     [31:0]      imm32_o;
 reg     [4:0]       RDaddr_o;
 
 always@(posedge clk_i) begin
-    if(start_i) begin
+    if(start_i && !stall_i) begin
         ALUOp_o <= ALUOp_i;
         ALUSrc_o <= ALUSrc_i;
         RegWrite_o <= RegWrite_i;

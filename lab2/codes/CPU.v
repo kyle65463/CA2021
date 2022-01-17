@@ -124,6 +124,7 @@ wire                NoOp_o;
 wire                Stall_o;
 wire                PCWrite_o;
 wire                mem_stall_o;
+wire                stall_i = mem_stall_o || Stall_o;
 
 // Branch Unit
 wire                Flush;
@@ -232,7 +233,7 @@ IFID IFID(
     .clk_i      (clk_i),
     .start_i    (start_i),
     
-    .Stall_i    (Stall_o),
+    .Stall_i    (stall_i),
     .Flush_i    (Flush),
     .pc_i       (pc_o),
     .instr_i    (instr_o),
@@ -244,6 +245,7 @@ IFID IFID(
 IDEX IDEX(
     .clk_i      (clk_i),
     .start_i    (start_i),
+    .stall_i    (stall_i),
 
     .ALUOp_i    (ALUOp_o),
     .ALUSrc_i   (ALUSrc_o),
@@ -277,6 +279,7 @@ IDEX IDEX(
 EXMEM EXMEM(
     .clk_i      (clk_i),
     .start_i    (start_i),
+    .stall_i    (stall_i),
 
     .ALUres_i   (ALUdata_o),
     .RegWrite_i (p1_RegWrite_o),
@@ -298,6 +301,7 @@ EXMEM EXMEM(
 MEMWB MEMWB(
     .clk_i      (clk_i),
     .start_i    (start_i),
+    .stall_i    (stall_i),
 
     .ALUres_i   (p2_ALUres_o),
     .RegWrite_i (p2_RegWrite_o),

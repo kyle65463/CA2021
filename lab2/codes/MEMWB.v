@@ -2,6 +2,7 @@ module MEMWB
 (
     clk_i,
     start_i,
+    stall_i,
     
     ALUres_i,
     RegWrite_i,
@@ -19,6 +20,7 @@ module MEMWB
 // Ports
 input               clk_i;
 input               start_i;
+input               stall_i;
 input   [31:0]      ALUres_i;
 input               RegWrite_i;
 input               MemtoReg_i;
@@ -38,7 +40,7 @@ reg     [31:0]      Memdata_o;
 reg     [4:0]       RDaddr_o;
 
 always@(posedge clk_i) begin
-    if(start_i) begin
+    if(start_i && !stall_i) begin
         ALUres_o <= ALUres_i;
         RegWrite_o <= RegWrite_i;
         MemtoReg_o <= MemtoReg_i;
