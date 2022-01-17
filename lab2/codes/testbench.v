@@ -101,6 +101,8 @@ initial begin
     Data_Memory.memory[3] = 256'h0123_4567_89AB_CDEF_FEDC_BA98_7654_3210_0123_4567_89AB_CDEF_FEDC_BA98_7654_3210;
     Data_Memory.memory[32] = 256'h1001_2002_3003_4004_5005_6006_7007_8008_9009_A00A_B00B_C00C_D00D_E00E_F00F;
     // [D-MemoryInitialization] DO NOT REMOVE THIS FLAG !!!
+    Data_Memory.memory[16] = 256'h0123456789abcdeffedcba98765432100123456789abcdeffedcba9876543210;
+    Data_Memory.memory[17] = 256'h00000110022003300440055006600770088009900aa00bb00cc00dd00ee00ff0;
 
     CPU.Hazard_Detection.Stall_o = 1'b0;
     CPU.Hazard_Detection.NoOp_o = 1'b0;
@@ -140,9 +142,11 @@ always@(posedge Clk) begin
         for (j=0; j<2; j=j+1) begin
             for (i=0; i<16; i=i+1) begin
                 tag = CPU.dcache.dcache_sram.tag[i][j];
-                index = i;
-                address = {tag[22:0], index};
-                Data_Memory.memory[address] = CPU.dcache.dcache_sram.data[i][j];
+                if (CPU.dcache.dcache_sram.tag[i][j][24]) begin
+                    index = i;
+                    address = {tag[22:0], index};
+                    Data_Memory.memory[address] = CPU.dcache.dcache_sram.data[i][j];
+                end
             end 
         end
     end

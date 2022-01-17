@@ -124,7 +124,7 @@ wire                NoOp_o;
 wire                Stall_o;
 wire                PCWrite_o;
 wire                mem_stall_o;
-wire                stall_i = mem_stall_o || Stall_o;
+wire                stall_i = mem_stall_o | Stall_o;
 
 // Branch Unit
 wire                Flush;
