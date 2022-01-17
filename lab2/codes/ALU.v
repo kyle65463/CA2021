@@ -20,7 +20,7 @@ assign data_o = (ALUCtrl_i == 3'b000) ? data1_i &   data2_i: // and
                 (ALUCtrl_i == 3'b011) ? data1_i -   data2_i: // sub
                 (ALUCtrl_i == 3'b100) ? data1_i *   data2_i: // mul
                 (ALUCtrl_i == 3'b101) ? data1_i +   data2_i: // add
-                (ALUCtrl_i == 3'b110) ? data1_i >>> data2_i[4:0]: // sra
+                (ALUCtrl_i == 3'b110) ? $signed($signed(data1_i) >>> data2_i[4:0]): // sra
                 32'bx;
 
 endmodule

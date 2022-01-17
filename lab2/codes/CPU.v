@@ -124,7 +124,8 @@ wire                NoOp_o;
 wire                Stall_o;
 wire                PCWrite_o;
 wire                mem_stall_o;
-wire                stall_i = mem_stall_o | Stall_o;
+wire                ifid_stall_i = mem_stall_o | Stall_o;
+wire                stall_i = mem_stall_o;
 
 // Branch Unit
 wire                Flush;
@@ -233,7 +234,7 @@ IFID IFID(
     .clk_i      (clk_i),
     .start_i    (start_i),
     
-    .Stall_i    (stall_i),
+    .Stall_i    (ifid_stall_i),
     .Flush_i    (Flush),
     .pc_i       (pc_o),
     .instr_i    (instr_o),
